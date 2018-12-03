@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Row, Col, Panel, Button, Form} from "react-bootstrap";
+import {Row, Col, Panel, Button} from "react-bootstrap";
 import Login from "./Login";
 import Signup from './Signup';
 import "./Home.css";
@@ -20,8 +20,8 @@ export default class Home extends Component {
     }
 
     render() {
-
         const {showLogin} = this.state;
+
         return (
             <div className="Home">
                 <Row>
@@ -33,8 +33,14 @@ export default class Home extends Component {
                     <Col md={4}>
                         <Panel>
                             <div className="Login">
-                                {showLogin && <Login compact/>}
-                                {!showLogin && <Signup compact/>}
+                                {showLogin &&
+                                <Login
+                                    compact
+                                    {...this.props}/>}
+                                {!showLogin &&
+                                <Signup
+                                    compact
+                                    {...this.props}/>}
                                 <Button
                                     type="button"
                                     block
@@ -50,7 +56,7 @@ export default class Home extends Component {
                 <Row>
                     <Col md={12}>
                         <div className="temp" style={{height: '600px'}}>
-                            <h1>[Shedule,Leagues,Standings]</h1>
+                            <h1>[Schedule,Leagues,Standings]</h1>
                         </div>
                     </Col>
                 </Row>

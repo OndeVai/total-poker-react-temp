@@ -1,8 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {HelpBlock} from "react-bootstrap";
-
 import Auth from '../services/Auth';
-
 import SignupValidator from "../services/validators/SignupValidator";
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
@@ -60,7 +58,7 @@ export default class Signup extends Component {
             await Auth.confirmSignUp(this.state.username, this.state.confirmationCode, this.state.password);
 
             this.props.userHasAuthenticated(true);
-            this.props.history.push("/"); //todo this will change
+            this.props.history.push("/setup"); //todo this will change
         } catch (e) {
             this.handleConfirmationError(e);
             this.setState({isLoading: false});

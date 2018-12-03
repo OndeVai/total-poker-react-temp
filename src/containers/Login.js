@@ -1,14 +1,13 @@
 import React, {Component, Fragment} from "react";
 import {Alert, HelpBlock} from "react-bootstrap";
-import {Link} from "react-router-dom";
 import Auth from '../services/Auth';
+import LoginValidator from "../services/validators/LoginValidator";
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
 import ErrorAlert from "../components/ErrorAlert";
 import AppliedFormGroup from "../components/AppliedFormGroup";
-import "./Login.css";
-import LoginValidator from "../services/validators/LoginValidator";
 import RequiredIndicator from "../components/RequiredIndicator";
+import "./Login.css";
 
 export default class Login extends Component {
     constructor(props) {
