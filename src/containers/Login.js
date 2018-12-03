@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from "react";
-import {FormGroup, FormControl, ControlLabel, Alert, HelpBlock} from "react-bootstrap";
+import {Alert, HelpBlock} from "react-bootstrap";
+import {Link} from "react-router-dom";
 import Auth from '../services/Auth';
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
 import ErrorAlert from "../components/ErrorAlert";
 import AppliedFormGroup from "../components/AppliedFormGroup";
 import "./Login.css";
-import LoginValidator from "../services/validators/SignupValidator";
+import LoginValidator from "../services/validators/LoginValidator";
 import RequiredIndicator from "../components/RequiredIndicator";
 
 export default class Login extends Component {
@@ -95,15 +96,18 @@ export default class Login extends Component {
 
 
     renderForm() {
+
+        const compact = this.props.compact;
+        const isValid = this.validateForm();
         return (
             <Fragment>
-                <h1>Login</h1>
+                {!compact && <h1>Login</h1>}
                 <ErrorAlert
                     message={this.state.loginErrorMessage}
                     type={this.state.loginErrorMessageType}/>
                 <form onSubmit={this.handleSubmit}>
                     <AppliedFormGroup
-                        groupProps={{controlId: 'username', labelText: 'Username'}}
+                        groupProps={{controlId: 'username', labelText: 'Username', hideLabel: compact}}
                         validator={LoginValidator}
                         required
                         type="text"
@@ -111,25 +115,29 @@ export default class Login extends Component {
                         onChange={this.handleChange}
                     />
                     <AppliedFormGroup
-                        groupProps={{controlId: 'password', labelText: 'Password'}}
+                        groupProps={{controlId: 'password', labelText: 'Password', hideLabel: compact}}
                         validator={LoginValidator}
                         required
                         type="password"
                         value={this.state.password}
                         onChange={this.handleChange}
                     />
-                    <HelpBlock><RequiredIndicator/> indicates required field</HelpBlock>
+                    {!compact && <HelpBlock><RequiredIndicator/> indicates required field</HelpBlock>}
                     <LoaderButton
                         block
                         bsSize="large"
-                        disabled={!this.validateForm()}
+                        disabled={!isValid}
                         type="submit"
                         isLoading={this.state.isLoading}
                         text="Login"
                         bsStyle="success"
+                        active={isValid}
                         loadingText="Logging in…"
                     />
                 </form>
+                <div>
+
+                </div>
             </Fragment>
         );
     }
@@ -160,7 +168,7 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div className="Login">
+            <div className={this.props.compact ? null : "Login"}>
                 {!this.state.showConfirmation
                     ? this.renderForm()
                     : this.renderConfirmationForm()}

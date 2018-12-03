@@ -104,15 +104,16 @@ export default class Signup extends Component {
     }
 
     renderForm() {
+        const compact = this.props.compact;
         return (
             <Fragment>
-                <h1>Signup</h1>
+                {!compact && <h1>Join Now</h1>}
                 <ErrorAlert
                     message={this.state.signUpErrorMessage}
                     type={this.state.signUpErrorMessageType}/>
                 <form onSubmit={this.handleSubmit} noValidate>
                     <AppliedFormGroup
-                        groupProps={{controlId: 'username', labelText: 'Username'}}
+                        groupProps={{controlId: 'username', labelText: 'Username', hideLabel: compact}}
                         validator={SignupValidator}
                         required
                         type="text"
@@ -120,7 +121,7 @@ export default class Signup extends Component {
                         onChange={this.handleChange}
                     />
                     <AppliedFormGroup
-                        groupProps={{controlId: 'email', labelText: 'Email'}}
+                        groupProps={{controlId: 'email', labelText: 'Email', hideLabel: compact}}
                         validator={SignupValidator}
                         required
                         type="email"
@@ -128,7 +129,7 @@ export default class Signup extends Component {
                         onChange={this.handleChange}
                     />
                     <AppliedFormGroup
-                        groupProps={{controlId: 'password', labelText: 'Password'}}
+                        groupProps={{controlId: 'password', labelText: 'Password', hideLabel: compact}}
                         validator={SignupValidator}
                         required
                         type="password"
@@ -136,7 +137,7 @@ export default class Signup extends Component {
                         onChange={this.handleChange}
                     />
                     <AppliedFormGroup
-                        groupProps={{controlId: 'confirmPassword', labelText: 'Confirm Password'}}
+                        groupProps={{controlId: 'confirmPassword', labelText: 'Confirm Password', hideLabel: compact}}
                         validator={SignupValidator}
                         required
                         type="password"
@@ -144,7 +145,7 @@ export default class Signup extends Component {
                         compareTo={this.state.password}
                         onChange={this.handleChange}
                     />
-                    <HelpBlock><RequiredIndicator/> indicates required field</HelpBlock>
+                    {!compact && <HelpBlock><RequiredIndicator/> indicates required field</HelpBlock>}
                     <LoaderButton
                         block
                         bsSize="large"
@@ -154,7 +155,7 @@ export default class Signup extends Component {
                         text="Signup"
                         bsStyle="success"
                         loadingText="Signing up…"
-
+                        active
                     />
                 </form>
             </Fragment>
@@ -163,7 +164,7 @@ export default class Signup extends Component {
 
     render() {
         return (
-            <div className="Signup">
+            <div className={this.props.compact ? null : "Signup"}>
                 {this.state.newUser === null
                     ? this.renderForm()
                     : this.renderConfirmationForm()}

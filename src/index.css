@@ -14,3 +14,14 @@ input.form-control {
 input[type=file] {
   width: 100%;
 }
+
+.temp {
+  background-color: whitesmoke;
+  display: flex;
+  align-items: center;
+}
+
+.temp h1 {
+  width: 100%;
+  text-align: center;
+}

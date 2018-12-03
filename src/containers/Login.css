@@ -5,3 +5,7 @@
     max-width: 320px;
   }
 }
+
+.Login button.register {
+  margin-top: 15px;
+}

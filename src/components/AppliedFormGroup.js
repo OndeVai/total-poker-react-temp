@@ -24,10 +24,10 @@ class AppliedFormGroup extends Component {
         const {controlId, labelText} = this.props.groupProps;
         const {validator, compareTo} = this.props;
         const validationFunc = validator[`${controlId}Error`]; //todo e.target.id
-        if(!validationFunc) return;
+        if (!validationFunc) return;
 
         let error = validationFunc(e.target.value, compareTo);
-        if(error) error = `${labelText} ${error}`;
+        if (error) error = `${labelText} ${error}`;
         this.setState({
             fieldError: error
         });
@@ -41,16 +41,22 @@ class AppliedFormGroup extends Component {
     render() {
 
         const {groupProps, validator, compareTo, ...props} = this.props;
-        const {labelText, ...newGroupProps} = groupProps;
+        const {labelText, hideLabel, ...newGroupProps} = groupProps;
         newGroupProps.bsSize = newGroupProps.bsSize || 'large';
 
         const newControlProps =
-            Object.assign({}, props, {onChange: this.handleChange, onBlur: this.handleBlur})
+            Object.assign(
+                {}, props,
+                {
+                    onChange: this.handleChange,
+                    onBlur: this.handleBlur,
+                    placeholder: props.placeholder || labelText
+                })
 
         const requiredIndicator = newControlProps.required ? <RequiredIndicator/> : null;
         return (
             <FormGroup {...newGroupProps} validationState={this.getValidationState()}>
-                <ControlLabel>{labelText}{requiredIndicator}</ControlLabel>
+                {!hideLabel && <ControlLabel>{this.props.placeholder || labelText}{requiredIndicator}</ControlLabel>}
                 <FormControl {...newControlProps}/>
                 {this.state.fieldError && <HelpBlock bsClass="text-danger">
                     <small>{this.state.fieldError}</small>

@@ -1,97 +1,60 @@
-import React, { Component } from "react";
-import { API } from "aws-amplify";
-import { Link } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import React, {Component} from "react";
+import {Row, Col, Panel, Button, Form} from "react-bootstrap";
+import Login from "./Login";
+import Signup from './Signup';
 import "./Home.css";
 
 export default class Home extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      isLoading: true,
-      notes: []
-    };
-  }
-
-  async componentDidMount() {
-    if (!this.props.isAuthenticated) {
-      return;
+        this.state = {
+            showLogin: true
+        };
     }
 
-    try {
-      const notes = await this.notes();
-      this.setState({ notes });
-    } catch (e) {
-      alert(e);
+    toggleLoginSignUp = () => {
+        this.setState({
+            showLogin: !this.state.showLogin
+        })
     }
 
-    this.setState({ isLoading: false });
-  }
+    render() {
 
-  notes() {
-    return API.get("notes", "/notes");
-  }
-
-  renderNotesList(notes) {
-    return [{}].concat(notes).map(
-      (note, i) =>
-        i !== 0
-          ? <LinkContainer
-              key={note.noteId}
-              to={`/notes/${note.noteId}`}
-            >
-              <ListGroupItem header={note.content.trim().split("\n")[0]}>
-                {"Created: " + new Date(note.createdAt).toLocaleString()}
-              </ListGroupItem>
-            </LinkContainer>
-          : <LinkContainer
-              key="new"
-              to="/notes/new"
-            >
-              <ListGroupItem>
-                <h4>
-                  <b>{"\uFF0B"}</b> Create a new note
-                </h4>
-              </ListGroupItem>
-            </LinkContainer>
-    );
-  }
-
-  renderLander() {
-    return (
-      <div className="lander">
-        <h1>Scratch</h1>
-        <p>A simple note taking app</p>
-        <div>
-          <Link to="/login" className="btn btn-info btn-lg">
-            Login
-          </Link>
-          <Link to="/signup" className="btn btn-success btn-lg">
-            Signup
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  renderNotes() {
-    return (
-      <div className="notes">
-        <PageHeader>Your Notes</PageHeader>
-        <ListGroup>
-          {!this.state.isLoading && this.renderNotesList(this.state.notes)}
-        </ListGroup>
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <div className="Home">
-        {this.props.isAuthenticated ? this.renderNotes() : this.renderLander()}
-      </div>
-    );
-  }
+        const {showLogin} = this.state;
+        return (
+            <div className="Home">
+                <Row>
+                    <Col md={8}>
+                        <div className="temp" style={{height: '293px'}}>
+                            <h1>[Ad]</h1>
+                        </div>
+                    </Col>
+                    <Col md={4}>
+                        <Panel>
+                            <div className="Login">
+                                {showLogin && <Login compact/>}
+                                {!showLogin && <Signup compact/>}
+                                <Button
+                                    type="button"
+                                    block
+                                    bsSize="large"
+                                    className="register"
+                                    onClick={this.toggleLoginSignUp}>
+                                    {!showLogin ? "Login" : "Join Now"}
+                                </Button>
+                            </div>
+                        </Panel>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        <div className="temp" style={{height: '600px'}}>
+                            <h1>[Shedule,Leagues,Standings]</h1>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
 }
