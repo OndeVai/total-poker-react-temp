@@ -1,9 +1,10 @@
 import React, {Component, Fragment} from "react";
-import {FormGroup, FormControl, ControlLabel} from "react-bootstrap";
+import {FormGroup, FormControl, ControlLabel, HelpBlock} from "react-bootstrap";
 import Auth from '../services/Auth';
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
 import ErrorAlert from "../components/ErrorAlert";
+import AppliedFormGroup from "../components/AppliedFormGroup";
 import "./Signup.css";
 
 export default class Signup extends Component {
@@ -102,6 +103,29 @@ export default class Signup extends Component {
         );
     }
 
+    handleEmailChange = event => {
+        const error = this.validateEmail(event);
+        this.setState({
+            [event.target.id]: event.target.value,
+            [`${event.target.id}Error`]: error
+        });
+    }
+
+    handleEmailBlur = event => {
+        const error = this.validateEmail(event);
+        this.setState({
+            [`${event.target.id}Error`]: error
+        });
+    }
+
+    validateEmail = (event) => {
+
+        if (!event.target.value) {
+            return 'Email is required!';
+        }
+        return null;
+    }
+
     renderForm() {
         return (
             <Fragment>
@@ -118,14 +142,14 @@ export default class Signup extends Component {
                             onChange={this.handleChange}
                         />
                     </FormGroup>
-                    <FormGroup controlId="email" bsSize="large">
-                        <ControlLabel>Email</ControlLabel>
-                        <FormControl
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.handleChange}
-                        />
-                    </FormGroup>
+                    <AppliedFormGroup
+                        groupProps = {{controlId: 'email', labelText:'Email', bsSize:"large"}}
+                        validate={this.validateEmail}
+                        type="email"
+                        value={this.state.email}
+                        onChange={this.handleEmailChange}
+                        onBlur={this.handleEmailBlur}
+                    />
                     <FormGroup controlId="password" bsSize="large">
                         <ControlLabel>Password</ControlLabel>
                         <FormControl
