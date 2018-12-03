@@ -1,10 +1,14 @@
 import React, {Component, Fragment} from "react";
+import {HelpBlock} from "react-bootstrap";
+
 import Auth from '../services/Auth';
+
 import SignupValidator from "../services/validators/SignupValidator";
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
 import ErrorAlert from "../components/ErrorAlert";
 import AppliedFormGroup from "../components/AppliedFormGroup";
+import RequiredIndicator from "../components/RequiredIndicator"
 import "./Signup.css";
 
 export default class Signup extends Component {
@@ -102,15 +106,15 @@ export default class Signup extends Component {
     renderForm() {
         return (
             <Fragment>
-
+                <h1>Signup</h1>
                 <ErrorAlert
                     message={this.state.signUpErrorMessage}
                     type={this.state.signUpErrorMessageType}/>
-                <h1>Signup</h1>
                 <form onSubmit={this.handleSubmit} noValidate>
                     <AppliedFormGroup
                         groupProps={{controlId: 'username', labelText: 'Username'}}
                         validator={SignupValidator}
+                        required
                         type="text"
                         value={this.state.username}
                         onChange={this.handleChange}
@@ -118,6 +122,7 @@ export default class Signup extends Component {
                     <AppliedFormGroup
                         groupProps={{controlId: 'email', labelText: 'Email'}}
                         validator={SignupValidator}
+                        required
                         type="email"
                         value={this.state.email}
                         onChange={this.handleChange}
@@ -125,6 +130,7 @@ export default class Signup extends Component {
                     <AppliedFormGroup
                         groupProps={{controlId: 'password', labelText: 'Password'}}
                         validator={SignupValidator}
+                        required
                         type="password"
                         value={this.state.password}
                         onChange={this.handleChange}
@@ -132,11 +138,13 @@ export default class Signup extends Component {
                     <AppliedFormGroup
                         groupProps={{controlId: 'confirmPassword', labelText: 'Confirm Password'}}
                         validator={SignupValidator}
+                        required
                         type="password"
                         value={this.state.confirmPassword}
                         compareTo={this.state.password}
                         onChange={this.handleChange}
                     />
+                    <HelpBlock><RequiredIndicator/> indicates required field</HelpBlock>
                     <LoaderButton
                         block
                         bsSize="large"

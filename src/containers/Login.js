@@ -1,10 +1,13 @@
 import React, {Component, Fragment} from "react";
-import {FormGroup, FormControl, ControlLabel, Alert} from "react-bootstrap";
+import {FormGroup, FormControl, ControlLabel, Alert, HelpBlock} from "react-bootstrap";
 import Auth from '../services/Auth';
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
 import ErrorAlert from "../components/ErrorAlert";
+import AppliedFormGroup from "../components/AppliedFormGroup";
 import "./Login.css";
+import LoginValidator from "../services/validators/SignupValidator";
+import RequiredIndicator from "../components/RequiredIndicator";
 
 export default class Login extends Component {
     constructor(props) {
@@ -94,27 +97,28 @@ export default class Login extends Component {
     renderForm() {
         return (
             <Fragment>
+                <h1>Login</h1>
                 <ErrorAlert
                     message={this.state.loginErrorMessage}
                     type={this.state.loginErrorMessageType}/>
                 <form onSubmit={this.handleSubmit}>
-                    <FormGroup controlId="username" bsSize="large">
-                        <ControlLabel>Username</ControlLabel>
-                        <FormControl
-                            autoFocus
-                            type="text"
-                            value={this.state.username}
-                            onChange={this.handleChange}
-                        />
-                    </FormGroup>
-                    <FormGroup controlId="password" bsSize="large">
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password"
-                        />
-                    </FormGroup>
+                    <AppliedFormGroup
+                        groupProps={{controlId: 'username', labelText: 'Username'}}
+                        validator={LoginValidator}
+                        required
+                        type="text"
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                    />
+                    <AppliedFormGroup
+                        groupProps={{controlId: 'password', labelText: 'Password'}}
+                        validator={LoginValidator}
+                        required
+                        type="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                    />
+                    <HelpBlock><RequiredIndicator/> indicates required field</HelpBlock>
                     <LoaderButton
                         block
                         bsSize="large"
@@ -122,6 +126,7 @@ export default class Login extends Component {
                         type="submit"
                         isLoading={this.state.isLoading}
                         text="Login"
+                        bsStyle="success"
                         loadingText="Logging in…"
                     />
                 </form>

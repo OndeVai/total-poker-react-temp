@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
+import RequiredIndicator from "./RequiredIndicator"
 
 class AppliedFormGroup extends Component {
     constructor(props) {
@@ -46,9 +47,10 @@ class AppliedFormGroup extends Component {
         const newControlProps =
             Object.assign({}, props, {onChange: this.handleChange, onBlur: this.handleBlur})
 
+        const requiredIndicator = newControlProps.required ? <RequiredIndicator/> : null;
         return (
             <FormGroup {...newGroupProps} validationState={this.getValidationState()}>
-                <ControlLabel>{labelText}</ControlLabel>
+                <ControlLabel>{labelText}{requiredIndicator}</ControlLabel>
                 <FormControl {...newControlProps}/>
                 {this.state.fieldError && <HelpBlock bsClass="text-danger">
                     <small>{this.state.fieldError}</small>
