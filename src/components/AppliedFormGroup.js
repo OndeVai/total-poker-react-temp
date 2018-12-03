@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
 
-export default class Home extends Component {
+class AppliedFormGroup extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -11,31 +11,37 @@ export default class Home extends Component {
 
     handleChange = e => {
         this.handleValidation(e);
-        if(this.props.onChange) this.props.onChange(e);
+        if (this.props.onChange) this.props.onChange(e);
     }
 
     handleBlur = e => {
         this.handleValidation(e);
-        if(this.props.onBlur) this.props.onBlur(e);
+        if (this.props.onBlur) this.props.onBlur(e);
     }
 
-    handleValidation = e =>{
-        const error = this.props.validate(e);
+    handleValidation = e => {
+        const {controlId, labelText} = this.props.groupProps;
+        const {validator, compareTo} = this.props;
+        const validationFunc = validator[`${controlId}Error`]; //todo e.target.id
+        if(!validationFunc) return;
+
+        let error = validationFunc(e.target.value, compareTo);
+        if(error) error = `${labelText} ${error}`;
         this.setState({
             fieldError: error
         });
     }
 
     getValidationState = () => {
-        var error = this.state.fieldError;
-        if (error) return 'error';
+        if (this.state.fieldError) return 'error';
         return null;
     }
 
     render() {
 
-        const {groupProps, validate, ...props} = this.props;
+        const {groupProps, validator, compareTo, ...props} = this.props;
         const {labelText, ...newGroupProps} = groupProps;
+        newGroupProps.bsSize = newGroupProps.bsSize || 'large';
 
         const newControlProps =
             Object.assign({}, props, {onChange: this.handleChange, onBlur: this.handleBlur})
@@ -44,10 +50,13 @@ export default class Home extends Component {
             <FormGroup {...newGroupProps} validationState={this.getValidationState()}>
                 <ControlLabel>{labelText}</ControlLabel>
                 <FormControl {...newControlProps}/>
-                {this.state.fieldError && <HelpBlock bsClass="text-danger">{this.state.fieldError}</HelpBlock>}
+                {this.state.fieldError && <HelpBlock bsClass="text-danger">
+                    <small>{this.state.fieldError}</small>
+                </HelpBlock>}
             </FormGroup>
         );
     }
 }
 
-// {this.state.emailError && <HelpBlock bsClass="text-danger">{this.state.emailError}</HelpBlock>}
+
+export default AppliedFormGroup;

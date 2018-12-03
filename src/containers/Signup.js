@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
-import {FormGroup, FormControl, ControlLabel, HelpBlock} from "react-bootstrap";
 import Auth from '../services/Auth';
+import SignupValidator from "../services/validators/SignupValidator";
 import ConfirmationCodeForm from "../components/ConfirmationCodeForm";
 import LoaderButton from "../components/LoaderButton";
 import ErrorAlert from "../components/ErrorAlert";
@@ -24,18 +24,6 @@ export default class Signup extends Component {
             confirmationErrorMessage: "",
             confirmationErrorMessageType: ""
         };
-    }
-
-    validateForm() {
-        return (
-            this.state.email.length > 0 &&
-            this.state.password.length > 0 &&
-            this.state.password === this.state.confirmPassword
-        );
-    }
-
-    validateConfirmationForm() {
-        return this.state.confirmationCode.length > 0;
     }
 
     handleChange = event => {
@@ -103,69 +91,52 @@ export default class Signup extends Component {
         );
     }
 
-    handleEmailChange = event => {
-        const error = this.validateEmail(event);
-        this.setState({
-            [event.target.id]: event.target.value,
-            [`${event.target.id}Error`]: error
-        });
+    validateForm() {
+        return !SignupValidator.errorsAll(this.state);
     }
 
-    handleEmailBlur = event => {
-        const error = this.validateEmail(event);
-        this.setState({
-            [`${event.target.id}Error`]: error
-        });
-    }
-
-    validateEmail = (event) => {
-
-        if (!event.target.value) {
-            return 'Email is required!';
-        }
-        return null;
+    validateConfirmationForm(){
+        return !SignupValidator.confirmationCodeError(this.state.confirmationCode)
     }
 
     renderForm() {
         return (
             <Fragment>
+
                 <ErrorAlert
                     message={this.state.signUpErrorMessage}
                     type={this.state.signUpErrorMessageType}/>
-                <form onSubmit={this.handleSubmit}>
-                    <FormGroup controlId="username" bsSize="large">
-                        <ControlLabel>Username</ControlLabel>
-                        <FormControl
-                            autoFocus
-                            type="text"
-                            value={this.state.username}
-                            onChange={this.handleChange}
-                        />
-                    </FormGroup>
+                <h1>Signup</h1>
+                <form onSubmit={this.handleSubmit} noValidate>
                     <AppliedFormGroup
-                        groupProps = {{controlId: 'email', labelText:'Email', bsSize:"large"}}
-                        validate={this.validateEmail}
+                        groupProps={{controlId: 'username', labelText: 'Username'}}
+                        validator={SignupValidator}
+                        type="text"
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                    />
+                    <AppliedFormGroup
+                        groupProps={{controlId: 'email', labelText: 'Email'}}
+                        validator={SignupValidator}
                         type="email"
                         value={this.state.email}
-                        onChange={this.handleEmailChange}
-                        onBlur={this.handleEmailBlur}
+                        onChange={this.handleChange}
                     />
-                    <FormGroup controlId="password" bsSize="large">
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password"
-                        />
-                    </FormGroup>
-                    <FormGroup controlId="confirmPassword" bsSize="large">
-                        <ControlLabel>Confirm Password</ControlLabel>
-                        <FormControl
-                            value={this.state.confirmPassword}
-                            onChange={this.handleChange}
-                            type="password"
-                        />
-                    </FormGroup>
+                    <AppliedFormGroup
+                        groupProps={{controlId: 'password', labelText: 'Password'}}
+                        validator={SignupValidator}
+                        type="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                    />
+                    <AppliedFormGroup
+                        groupProps={{controlId: 'confirmPassword', labelText: 'Confirm Password'}}
+                        validator={SignupValidator}
+                        type="password"
+                        value={this.state.confirmPassword}
+                        compareTo={this.state.password}
+                        onChange={this.handleChange}
+                    />
                     <LoaderButton
                         block
                         bsSize="large"
@@ -173,7 +144,9 @@ export default class Signup extends Component {
                         type="submit"
                         isLoading={this.state.isLoading}
                         text="Signup"
+                        bsStyle="success"
                         loadingText="Signing up…"
+
                     />
                 </form>
             </Fragment>
